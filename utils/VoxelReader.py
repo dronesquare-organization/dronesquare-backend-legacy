@@ -22,7 +22,7 @@ def findFromVoxel(inputLoc, referencesData):
         if settings.DEV_LOCAL:
             dsm = os.path.split(settings.MEDIA_ROOT)[0] + referencesData.dsmDir
         else:
-            dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
+            dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
         with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
