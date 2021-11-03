@@ -2,7 +2,7 @@ import mimetypes
 import os
 import shutil
 from wsgiref.util import FileWrapper
-
+import boto3
 from django.conf import settings
 from django.core.files.base import File
 from django.db import transaction
@@ -29,6 +29,7 @@ from .serializers import (Etc2D3DLayersSerializer, EtcDocsSerializer,
                           NestedLayersSerializer, VideoListUploadSerializer,
                           VideoSerializer)
 from utils.ImgUploadSave import delfolder_exist, create_tmpfolder, path_settings_gcp, path_settings
+from io import BytesIO
 
 # Create your views here.
 
@@ -188,14 +189,21 @@ class VideoDownloadViewSet(viewsets.ViewSet):
         video = Video.objects.filter(projectId = projectId, email = email, id = id)
         if video.exists():
             video = video.first()
-            print(video.name)
-            file_path = settings.MEDIA_ROOT + "/"+str(video.fileDir)
-            if os.path.exists(file_path):
-                doc = open(file_path, 'rb')
-                response = HttpResponse(FileWrapper(doc), content_type=video.ext)
+            
+            file_path = "media/"+str(video.fileDir)
+            print(file_path)
+            try:
+                s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                bucket='droneplatform'
+                obj = s3_client.get_object(Bucket=bucket, Key=file_path)
+                response = HttpResponse(FileWrapper(BytesIO(obj['Body'].read())), content_type=video.ext)
                 response["Content-Length"] = video.size
                 response['Content-Disposition'] = 'inline; filename=%s' % video.name
                 return response
+            except Exception as e:
+                print(e, flush=True)
+                return Response({"message":"not exist"})
+                
         return Response({"message":"not exist"})
 
 
@@ -346,13 +354,18 @@ class EtcImgsDownloadViewSet(viewsets.ViewSet):
         etcImgs = EtcImgs.objects.filter(projectId = projectId, email = email, id = id)
         if etcImgs.exists():
             etcImg = etcImgs.first()
-            file_path = settings.MEDIA_ROOT + "/"+str(etcImg.fileDir)
-            if os.path.exists(file_path):
-                doc = open(file_path, 'rb')
-                response = HttpResponse(FileWrapper(doc), content_type=etcImg.ext)
+            file_path = "media/"+str(etcImg.fileDir)
+            try:
+                s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                bucket='droneplatform'
+                obj = s3_client.get_object(Bucket=bucket, Key=file_path)
+                response = HttpResponse(FileWrapper(BytesIO(obj['Body'].read())), content_type=etcImg.ext)
                 response["Content-Length"] = etcImg.size
                 response['Content-Disposition'] = 'inline; filename=%s' % etcImg.name
                 return response
+            except Exception as e:
+                print(e, flush=True)
+                return Response({"message":"not exist"})
         return Response({"message":"not exist"})
 # =========================ETCIMG======================================
 
@@ -498,15 +511,23 @@ class EtcDocsDownloadViewSet(viewsets.ViewSet):
         email = str(request.user)
         request.data["email"]=email
         etcDocs = EtcDocs.objects.filter(projectId = projectId, email = email, id = id)
+
+
+        
         if etcDocs.exists():
             etcDoc = etcDocs.first()
-            file_path = settings.MEDIA_ROOT + "/"+str(etcDoc.fileDir)
-            if os.path.exists(file_path):
-                doc = open(file_path, 'rb')
-                response = HttpResponse(FileWrapper(doc), content_type=etcDoc.ext)
+            file_path = "media/"+str(etcDoc.fileDir)
+            try:
+                s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                bucket='droneplatform'
+                obj = s3_client.get_object(Bucket=bucket, Key=file_path)
+                response = HttpResponse(FileWrapper(BytesIO(obj['Body'].read())), content_type=etcDoc.ext)
                 response["Content-Length"] = etcDoc.size
                 response['Content-Disposition'] = 'inline; filename=%s' % etcDoc.name
                 return response
+            except Exception as e:
+                print(e, flush=True)
+                return Response({"message":"not exist"})
         return Response({"message":"not exist"})
 # =========================ETCDOC======================================
 
@@ -687,15 +708,19 @@ class NestedLayersDownloadViewSet(viewsets.ViewSet):
         nestedLayers = NestedLayers.objects.filter(projectId = projectId, email = email, id = id)
         if nestedLayers.exists():
             nestedLayer = nestedLayers.first()
-            file_path = settings.MEDIA_ROOT + "/"+str(nestedLayer.fileDir)
-            if os.path.exists(file_path):
-                doc = open(file_path, 'rb')
-                response = HttpResponse(FileWrapper(doc), content_type=nestedLayer.ext)
+            file_path = "media/"+str(nestedLayer.fileDir)
+            try:
+                s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+                bucket='droneplatform'
+                obj = s3_client.get_object(Bucket=bucket, Key=file_path)
+                response = HttpResponse(FileWrapper(BytesIO(obj['Body'].read())), content_type=nestedLayer.ext)
                 response["Content-Length"] = nestedLayer.size
                 response['Content-Disposition'] = 'inline; filename=%s' % nestedLayer.name
                 return response
+            except Exception as e:
+                print(e, flush=True)
+                return Response({"message":"not exist"})
         return Response({"message":"not exist"})
-
 # =========================NESTEDLAYER=================================
 
 # =========================ETC2D3DLAYER================================
