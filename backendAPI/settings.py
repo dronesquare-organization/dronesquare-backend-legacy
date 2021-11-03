@@ -195,4 +195,4 @@ DEFAULT_FILE_STORAGE = 'backendAPI.storages.S3DefaultStorage'
 STATICFILES_STORAGE = 'backendAPI.storages.S3StaticStorage'
 AWS_QUERYSTRING_AUTH = False
 
-DEV_LOCAL = True
+DEV_LOCAL = False
