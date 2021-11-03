@@ -141,9 +141,9 @@ def calculateByDSM(inputGeoJson, referencesData):
         if settings.DEV_LOCAL:
             dsm = os.path.split(settings.MEDIA_ROOT)[0] + referencesData.dsmDir
         else:
-            dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
+            dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
-        with rasterio.Env(AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+        with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, inputGeoJson, crop=True, all_touched=True, nodata=-10000)
 
@@ -231,9 +231,9 @@ def calculateVolume(inputGeoJson, referencesData, minz):
         if settings.DEV_LOCAL:
             dsm = os.path.split(settings.MEDIA_ROOT)[0] + referencesData.dsmDir
         else:
-            dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
+            dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
-        with rasterio.Env(AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+        with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, inputGeoJson, crop=True, nodata=-10000, filled=True)
 
@@ -265,9 +265,9 @@ def getLocation(inputLoc, referencesData):
         if settings.DEV_LOCAL:
             dsm = os.path.split(settings.MEDIA_ROOT)[0] + referencesData.dsmDir
         else:
-            dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
+            dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
-        with rasterio.Env(AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+        with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, geoJsonData, crop=True, all_touched=True, nodata=-10000)
         out_meta = file.meta
@@ -344,9 +344,9 @@ def getHighProfile(inputLoc, referencesData):
         if settings.DEV_LOCAL:
             dsm = os.path.split(settings.MEDIA_ROOT)[0] + referencesData.dsmDir
         else:
-            dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
+            dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
-        with rasterio.Env(AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+        with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, polygon, crop=True, all_touched=True, nodata=-10000)
 

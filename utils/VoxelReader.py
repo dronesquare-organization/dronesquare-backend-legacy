@@ -24,7 +24,7 @@ def findFromVoxel(inputLoc, referencesData):
         else:
             dsm = 's3://droneplatform/{}'.format(referencesData.dsmDir)
 
-        with rasterio.Env(AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+        with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, geoJsonData, crop=True, all_touched=True)
 
@@ -65,7 +65,7 @@ def findFromVoxel(inputLoc, referencesData):
             s3 = boto3.resource('s3')
 
 
-            obj = s3.Object(BUCKET_NAME, referencesData.voxelDir)
+            obj = s3.Object(BUCKET_NAME, referencesData.voxelDir[1:])
             data = obj.get()['Body'].read().decode('utf-8')
             json_data = json.loads(data)
 
