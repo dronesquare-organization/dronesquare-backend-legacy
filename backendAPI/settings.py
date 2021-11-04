@@ -174,7 +174,7 @@ EMAIL_HOST = config_secret_common['django']['email']['host']
 EMAIL_HOST_USER = config_secret_common['django']['email']['user']
 EMAIL_HOST_PASSWORD = config_secret_common['django']['email']['password']
 EMAIL_PORT = config_secret_common['django']['email']['port']
-FRONTEND_URL = 'http://drone-web-alb-2058947512.ap-northeast-2.elb.amazonaws.com/'
+FRONTEND_URL = 'http://dronesquare.net/'
 DEFAULT_FROM_EMAIL = config_secret_common['django']['email']['default_from_email']
 
 STATIC_URL = '/static/'
