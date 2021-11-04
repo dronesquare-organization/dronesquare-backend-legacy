@@ -91,13 +91,13 @@ def change_filter(originFile, delta, img):
     else:
         img_original = adjust_brightness_decrease(img_original, abs(delta))
     destination = 'media/{email}/projects/{projectId}/bright/{name}'.format(email=img.email,
-                                                                                      projectId=img.projectId, name=str(img.fileDir).split("/")[-1])
+                                                                                      projectId=img.projectId, name="filtered_"+str(img.fileDir).split("/")[-1])
     if not os.path.exists("/home/ubuntu/"+'/'.join(destination.split("/")[:-1])):
         os.makedirs("/home/ubuntu/"+'/'.join(destination.split("/")[:-1]))
 
     cv2.imwrite("/home/ubuntu/"+destination, img_original)
     
-    s3_client.upload_file("/home/ubuntu/"+destination, "droneplatform", destination)
+    s3_client.upload_file("/home/ubuntu/"+destination, "droneplatform", destination, {"CacheControl":"no-cache, no-store, must-revalidate"})
     os.remove("/home/ubuntu/"+destination)
 
     return img_original
