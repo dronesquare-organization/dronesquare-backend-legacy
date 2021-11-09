@@ -327,17 +327,13 @@ class ImgsBrightViewSet(viewsets.ViewSet):
                 filtered_img = change_filter(originFile, float(request.data["illuminationDelta"]), img)
                 destinationDir = "{email}/projects/{projectId}/bright/{file}".format(
                     email=str(email),
-                    projectId=request.data["projectId"], file=img.name)
+                    projectId=request.data["projectId"], file="filtered_"+img.name)
                 img.filterDir = destinationDir
                 img.illuminationDelta = float(request.data["illuminationDelta"])
                 original = False
             img.save()
-            if original:
-                print("origin filter", flush=True)
-                return Response({"filterDir": destinationDir})
-            else:
-                print("illumination filter", flush=True)
-                return Response({"filterDir": destinationDir, "binary": base64.b64encode(filtered_img)})
+            print("is filtering?", not original, flush=True)
+            return Response({"filterDir": destinationDir, "origin": original})
         except FileNotFoundError:
             print(FileNotFoundError)
             return Response({"message": "not exsit"})
