@@ -24,7 +24,11 @@ def findFromVoxel(inputLoc, referencesData):
         else:
             dsm = 's3://droneplatform{}'.format(referencesData.dsmDir)
 
+        print('aws_access_key_id', settings.AWS_ACCESS_KEY_ID)
+        print('aws_access_key_id', settings.AWS_SECRET_ACCESS_KEY)
+
         with rasterio.Env(aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name="ap-northeast-2", AWS_S3_ENDPOINT='s3.ap-northeast-2.amazonaws.com'):
+            print("here ~~ ")
             with rasterio.open(dsm) as file:
                 out_image, out_transform = mask(file, geoJsonData, crop=True, all_touched=True)
 
@@ -62,17 +66,19 @@ def findFromVoxel(inputLoc, referencesData):
                 json_object = json_data["data"]
         else:
             BUCKET_NAME = 'droneplatform'
-            s3 = boto3.resource('s3')
+            client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
 
+            response = client.get_object(
+                Bucket=BUCKET_NAME,
+                Key=referencesData.voxelDir[1:]
+            )
 
-            obj = s3.Object(BUCKET_NAME, referencesData.voxelDir[1:])
-            data = obj.get()['Body'].read().decode('utf-8')
-            json_data = json.loads(data)
+            data = json.loads(response['Body'].read())
 
-            json_minimum = json_data["minimum"] # y x z
-            json_size = json_data["size"] # 간격
-            number = json_data["number"] # y x z
-            json_object = json_data["data"]
+            json_minimum = data["minimum"] # y x z
+            json_size = data["size"] # 간격
+            number = data["number"] # y x z
+            json_object = data["data"]
 
         y = float(json_minimum.split(" ")[0])
         x = float(json_minimum.split(" ")[1])
@@ -109,7 +115,7 @@ def findFromVoxel(inputLoc, referencesData):
             return "empty"
 
         
-        # return tmpReader[row, col]
+        return tmpReader[row, col]
 
     except FileNotFoundError as e:
         print(e)
