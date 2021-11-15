@@ -8,7 +8,7 @@ from rasterio.mask import mask
 from backendAPI import settings
 
 
-def transform_coordinate(origin, destination, data, type_of_method):
+def transform_coordinate(origin, destination, data, type_of_method): # 좌표계 변환 후 GeoJSON 폴리곤 포맷으로 변환
     transformResult = []
     points = []
 
@@ -70,7 +70,7 @@ def calculate3DArea(arr, points):
             "segment": {"d3": distance, "elevation": elevation, "angle": angle}}
 
 
-def calculate3DDistance(arr, points):
+def calculate3DDistance(arr, points): # 측정에서 점 사이 거리 측정할 때 사용
     distance = []
     angle = []
     elevation = []
@@ -94,7 +94,7 @@ def calculate3DDistance(arr, points):
             "segment": {"d3": distance, "elevation": elevation, "angle": angle}}
 
 
-def calculateByDSM(inputGeoJson, referencesData):
+def calculateByDSM(inputGeoJson, referencesData): # 상위 2개 함수 사용하여 넓이나 거리 구하는 메서드
     typeOfJson = inputGeoJson[0]['type']
 
     if typeOfJson != 'Point':
@@ -198,13 +198,13 @@ def calculateByDSM(inputGeoJson, referencesData):
         print(e)
 
 
-def volume_by_bottom_total(out_image, minz, gsd):  # 전체 볼륨
+def volume_by_bottom_total(out_image, minz, gsd):  # 전체 볼륨 계산(체적 정보) minz - 바닥면 높이 설정값, gsd - Dsm 가준 1픽셀당 실제 거리값
     changed = np.array(out_image, dtype=np.float64)
     result = np.sum(changed[changed != -10000] - minz, dtype=np.float64) * (gsd * gsd)
     return result
 
 
-def volume_by_bottom_fill(out_image, minz, gsd):  # 볼륨 채우기
+def volume_by_bottom_fill(out_image, minz, gsd):  # 볼륨 채우기 
     changed = np.array(out_image, dtype=np.float64)
     changed[changed != -10000] -= minz
     result = np.sum(np.sum(changed, axis=1, where=((changed != -10000) & (changed < 0)), dtype=np.float64),
@@ -212,7 +212,7 @@ def volume_by_bottom_fill(out_image, minz, gsd):  # 볼륨 채우기
     return result
 
 
-def surface_by_bottom(out_image, minz, gsd):
+def surface_by_bottom(out_image, minz, gsd): # 3D 표면적 계산 메소드
     changed = np.array(out_image, dtype=np.float64)
     changed[changed != -10000] -= minz
     changed[changed < 0] = 0
@@ -223,7 +223,7 @@ def surface_by_bottom(out_image, minz, gsd):
     return result
 
 
-def calculateVolume(inputGeoJson, referencesData, minz):
+def calculateVolume(inputGeoJson, referencesData, minz): # 체적 정보 계산 메소드, 위에 있는 3개 메소드를 사용하여 계산함
     transformResult = transform_coordinate(3857, int(referencesData.coordSystem),
                                            inputGeoJson[0]["coordinates"][0], "Polygon")
     inputGeoJson[0]['coordinates'][0] = transformResult
@@ -247,7 +247,7 @@ def calculateVolume(inputGeoJson, referencesData, minz):
         print(e)
 
 
-def getLocation(inputLoc, referencesData):
+def getLocation(inputLoc, referencesData): # 마우스 포인터 위치에 따른 Z값 계산 메소드 -  Maybe 2초 딜레이 설정되어 있음
     xmin = inputLoc[0]-0.001
     xmax = inputLoc[0]+0.001
     ymin = inputLoc[1]-0.001
@@ -305,7 +305,7 @@ def getLocation(inputLoc, referencesData):
         return -10000
 
 
-def getHighProfile(inputLoc, referencesData):
+def getHighProfile(inputLoc, referencesData): # 직선 측정 - 종단면 확인 - 거리 프로파일 계산 메소드(매 1m 간격) + 다중 횡단 프로파일(횡단 거리 설정에 따른 여러개의 횡단 좌표 계산)
     polygon = [{"type": "Polygon", "coordinates": []}]
     x = []
     y = []
