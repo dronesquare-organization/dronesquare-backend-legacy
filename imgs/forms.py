@@ -8,4 +8,4 @@ class ImgUploadForm(forms.ModelForm):
 
     class Meta:
         model = Imgs
-        fields = ("fileDir", )
+        fields = ("fileDir",)
