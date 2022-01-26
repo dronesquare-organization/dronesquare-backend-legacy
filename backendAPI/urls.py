@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# TODO: url은 각 앱의 폴더에 분리하고 include하여 사용할 것.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
