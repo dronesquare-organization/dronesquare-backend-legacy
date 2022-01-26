@@ -16,27 +16,17 @@ config_secret_common = json.loads(open(CONFIG_SECRET_COMMON_FILE).read())
 
 SECRET_KEY = config_secret_common['django']['secret_key']
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'rest_auth',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'django.contrib.sites',
-    'rest_auth.registration',
-    'corsheaders',
-    'drf_yasg',
-    'drf_braces',
-    'PIL',
+    'django.contrib.gis',
+]
+PROJECT_APPS = [
     'default',
     'users',
     'etcs',
@@ -45,10 +35,60 @@ INSTALLED_APPS = [
     'processing',
     'projects',
     'timeseries',
+]
+THIRD_PARTY_APPS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'rest_auth.registration',
+    'corsheaders',
+    'drf_yasg',
+    'drf_braces',
+    'PIL',
     'drf_chunked_upload',
-    'django.contrib.gis',
     'storages'
 ]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+# INSTALLED_APPS = [
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+#     'rest_framework',
+#     'rest_framework.authtoken',
+#     'rest_framework_simplejwt',
+#     'rest_framework_simplejwt.token_blacklist',
+#     'rest_auth',
+#     'allauth',
+#     'allauth.account',
+#     'allauth.socialaccount',
+#     'django.contrib.sites',
+#     'rest_auth.registration',
+#     'corsheaders',
+#     'drf_yasg',
+#     'drf_braces',
+#     'PIL',
+#     'default',
+#     'users',
+#     'etcs',
+#     'imgs',
+#     'layers',
+#     'processing',
+#     'projects',
+#     'timeseries',
+#     'drf_chunked_upload',
+#     'django.contrib.gis',
+#     'storages'
+# ]
 
 CELERY_BROKER_URL = ""
 
