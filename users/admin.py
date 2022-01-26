@@ -6,15 +6,19 @@ from .models import Users, Storages, Payment
 
 # Register your models here.
 class UsersAdmin(admin.ModelAdmin):
-    list_display = ('email',)
+    list_display = ("email",)
 
 
 class StoragesAdmin(admin.ModelAdmin):
-    list_display = ('email',)
+    list_display = ("email",)
 
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('email', 'account', 'bank',)
+    list_display = (
+        "email",
+        "account",
+        "bank",
+    )
 
 
 admin.site.register(Users, UsersAdmin)

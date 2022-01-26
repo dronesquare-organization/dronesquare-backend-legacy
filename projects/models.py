@@ -1,6 +1,5 @@
 from django.contrib.gis.db import models
 
-# Create your models here.
 # =========================PROJECTS===================================
 from django.core.files.storage import FileSystemStorage
 
@@ -68,7 +67,7 @@ class Projects(models.Model):
     )
     modified = models.DateTimeField(
         auto_now=True, null=False, blank=False, verbose_name="프로젝트 수정 일자"
-    ) 
+    )
     coordinateSystem = models.CharField(
         default="EPSG:3857",
         max_length=200,
@@ -86,7 +85,12 @@ class Projects(models.Model):
         null=False, blank=False, srid=4326, verbose_name="프로젝트 위치"
     )
     uploading = models.CharField(
-        default="처리전", max_length=50, null=False, blank=False, choices=UPLOAD_TYPE_CHOICES, verbose_name="업로딩 여부"
+        default="처리전",
+        max_length=50,
+        null=False,
+        blank=False,
+        choices=UPLOAD_TYPE_CHOICES,
+        verbose_name="업로딩 여부",
     )
     imgVolume = models.BigIntegerField(default=0, verbose_name="프로젝트 이미지 용량")
     videoVolume = models.BigIntegerField(default=0, verbose_name="프로젝트 비디오 용량")
@@ -101,7 +105,6 @@ class Projects(models.Model):
     isRtk = models.BooleanField(default=False, verbose_name="RTK 유무")
     duplicate_rate = models.FloatField(default=0, verbose_name="중복도")
     duplicate_std = models.FloatField(default=0, verbose_name="중복도 편차")
-
 
     def __str__(self):
         return str(self.id)
@@ -119,9 +122,9 @@ class Projects(models.Model):
 
 # =========================ANOMALY-TYPE==============================
 def anomalyType_default_value():  # This is a callable
-    return [
-        "메모", "균열", "부식", "녹슴", "손실", "변형", "누수", "안전위험", "잔해", "핫스팟", "간섭", "기타"
-      ]
+    return ["메모", "균열", "부식", "녹슴", "손실", "변형", "누수", "안전위험", "잔해", "핫스팟", "간섭", "기타"]
+
+
 class AnomalyTypes(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name="이슈 타입 아이디")
     projectId = models.ForeignKey(
@@ -137,9 +140,11 @@ class AnomalyTypes(models.Model):
         on_delete=models.CASCADE,
         verbose_name="이메일",
         db_column="email",
-        default=""
+        default="",
     )
-    types = models.JSONField(null=False, blank=False, default=anomalyType_default_value, verbose_name='이슈 타입')
+    types = models.JSONField(
+        null=False, blank=False, default=anomalyType_default_value, verbose_name="이슈 타입"
+    )
 
     def __str__(self):
         return str(self.id)
@@ -149,13 +154,14 @@ class AnomalyTypes(models.Model):
         verbose_name = "이슈 타입"
         verbose_name_plural = "이슈 타입들"
 
+
 # =========================ANOMALY-TYPE==============================
 
 # =========================ANOMALY-DEGREE============================
 def anomalyType_default_value():  # This is a callable
-    return [
-        "심각도", "중요도", "긴급도"
-      ]
+    return ["심각도", "중요도", "긴급도"]
+
+
 class AnomalyDegree(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name="이슈 정도 아이디")
     projectId = models.ForeignKey(
@@ -171,9 +177,11 @@ class AnomalyDegree(models.Model):
         on_delete=models.CASCADE,
         verbose_name="이메일",
         db_column="email",
-        default=""
+        default="",
     )
-    types = models.JSONField(null=False, blank=False, default=anomalyType_default_value, verbose_name='이슈 정도')
+    types = models.JSONField(
+        null=False, blank=False, default=anomalyType_default_value, verbose_name="이슈 정도"
+    )
 
     def __str__(self):
         return str(self.id)
@@ -182,6 +190,8 @@ class AnomalyDegree(models.Model):
         db_table = "anomaly_degree"
         verbose_name = "이슈 정도"
         verbose_name_plural = "이슈 정도들"
+
+
 # =========================ANOMALY-DEGREE============================
 
 # =========================DATA-PROCESS==============================
@@ -194,12 +204,12 @@ class DataProcess(models.Model):
         ("보완요구", "보완요구"),
     )
     COORDINATE_TYPE_CHOICES = (
-        ("EPSG:4326","EPSG:4326"),   #WGS84경위도
-        ("EPSG:3857","EPSG:3857"),   #WGS84경위도(m 단위)
-        ("EPSG:32652","EPSG:32652"), #UTM52N(WGS84)
-        ("EPSG:32651","EPSG:32651"), #UTM51N(WGS84)
-        ("EPSG:5186","EPSG:5186"),   #중부원점(GRS80)
-        ("EPSG:5187","EPSG:5187"),   #동부원점(GRS80)
+        ("EPSG:4326", "EPSG:4326"),  # WGS84경위도
+        ("EPSG:3857", "EPSG:3857"),  # WGS84경위도(m 단위)
+        ("EPSG:32652", "EPSG:32652"),  # UTM52N(WGS84)
+        ("EPSG:32651", "EPSG:32651"),  # UTM51N(WGS84)
+        ("EPSG:5186", "EPSG:5186"),  # 중부원점(GRS80)
+        ("EPSG:5187", "EPSG:5187"),  # 동부원점(GRS80)
     )
     id = models.BigAutoField(primary_key=True, verbose_name="데이터가공 아이디")
     email = models.ForeignKey(
@@ -240,11 +250,19 @@ class DataProcess(models.Model):
         verbose_name="데이터 프로세스 완료 날짜",
     )
     notice = models.TextField(default="", null=True, blank=True, verbose_name="알림 메모")
-    quality_low = models.IntegerField(default=0, null=True, blank=True, verbose_name="low 퀄리티 시간")
-    quality_high = models.IntegerField(default=0, null=True, blank=True, verbose_name="high 퀄리티 시간")
-    quality_mid = models.IntegerField(default=0, null=True, blank=True, verbose_name="mid 퀄리티 시간")
-    quality = models.CharField(max_length=50, null=True, blank=True, verbose_name="선택된 퀄리티")
-    gsd = models.FloatField(null=False, blank=False, default=0, verbose_name='gsd')
+    quality_low = models.IntegerField(
+        default=0, null=True, blank=True, verbose_name="low 퀄리티 시간"
+    )
+    quality_high = models.IntegerField(
+        default=0, null=True, blank=True, verbose_name="high 퀄리티 시간"
+    )
+    quality_mid = models.IntegerField(
+        default=0, null=True, blank=True, verbose_name="mid 퀄리티 시간"
+    )
+    quality = models.CharField(
+        max_length=50, null=True, blank=True, verbose_name="선택된 퀄리티"
+    )
+    gsd = models.FloatField(null=False, blank=False, default=0, verbose_name="gsd")
     mosaicResolution = models.FloatField(default=0, verbose_name="정사영상 해상도")
     pointDensity = models.FloatField(default=0, verbose_name="점밀도")
     precision_x = models.FloatField(default=0, verbose_name="x축 정밀도")
@@ -262,8 +280,12 @@ class DataProcess(models.Model):
     )
     admin_download = models.BooleanField(default=False, verbose_name="관리자 다운로드")
     admin_upload = models.BooleanField(default=False, verbose_name="관리자 업로드")
-    processOption = models.CharField(max_length=50, default="", null=True, blank=True, verbose_name="프로세스 옵션")
-    request_memo = models.TextField(default="", null=True, blank=True, verbose_name="요청 사항")
+    processOption = models.CharField(
+        max_length=50, default="", null=True, blank=True, verbose_name="프로세스 옵션"
+    )
+    request_memo = models.TextField(
+        default="", null=True, blank=True, verbose_name="요청 사항"
+    )
 
     class Meta:
         db_table = "dataprocess"
@@ -271,6 +293,7 @@ class DataProcess(models.Model):
         verbose_name = "데이터 가공"
         verbose_name_plural = "데이터 가공"
         ordering = ["-id"]
+
 
 # =========================DATA-PROCESS==============================
 
@@ -284,21 +307,23 @@ class DataProcessFile(models.Model):
         verbose_name="이메일",
         db_column="email",
     )
-    projectId = models.ForeignKey(
-        "Projects",
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        db_column="projectId",
-        verbose_name="프로젝트 아이디",
-    ),
+    projectId = (
+        models.ForeignKey(
+            "Projects",
+            null=True,
+            blank=True,
+            on_delete=models.CASCADE,
+            db_column="projectId",
+            verbose_name="프로젝트 아이디",
+        ),
+    )
     dataprocessId = models.ForeignKey(
         "DataProcess",
         null=True,
         blank=True,
         on_delete=models.CASCADE,
         db_column="dataprocessId",
-        verbose_name="데이터 프로세스 아이디"
+        verbose_name="데이터 프로세스 아이디",
     )
     name = models.CharField(
         max_length=200, null=False, blank=False, verbose_name="파일 이름"
@@ -309,11 +334,12 @@ class DataProcessFile(models.Model):
     fileDir = models.CharField(
         max_length=400, null=True, blank=True, verbose_name="피일 경로"
     )
-    fileType = models.CharField(max_length=100, null=False, blank=False, verbose_name="데이터 가공 파일 종류")
-
+    fileType = models.CharField(
+        max_length=100, null=False, blank=False, verbose_name="데이터 가공 파일 종류"
+    )
 
     def __str__(self):
-            return str(self.projectId)
+        return str(self.projectId)
 
     class Meta:
         db_table = "dataprocess_file"
@@ -321,5 +347,6 @@ class DataProcessFile(models.Model):
         verbose_name = "데이터 가공 파일첨부"
         verbose_name_plural = "데이터 가공 파일첨부"
         ordering = ["created"]
+
 
 # =========================DARA-PROCESS-FILE=========================

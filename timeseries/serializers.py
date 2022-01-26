@@ -45,4 +45,5 @@ class TimeSeriesInputSerializer(serializers.ModelSerializer):
         model = TimeSeries
         fields = ("name",)
 
+
 # =========================TIMESERIES=================================

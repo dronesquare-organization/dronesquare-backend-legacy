@@ -1,8 +1,10 @@
 from django.contrib.gis.db import models
-from utils.SetUploadPath import originalImg_upload_path, compressionImg_upload_path, thunmbnailImg_upload_path
+from utils.SetUploadPath import (
+    compressionImg_upload_path,
+    thunmbnailImg_upload_path,
+)
 from django.core.files.storage import FileSystemStorage
 
-# Create your models here.
 # =========================IMGS=======================================
 class OverwriteStorage(FileSystemStorage):
     """
@@ -32,13 +34,22 @@ class Imgs(models.Model):
     created = models.DateTimeField(null=False, blank=False, verbose_name="이미지 생성 일자")
     modified = models.DateTimeField(null=False, blank=False, verbose_name="이미지 변경 일자")
     size = models.IntegerField(null=False, blank=False, verbose_name="파일 크기")
-    fileDir = models.ImageField(upload_to=compressionImg_upload_path, null=True, blank=True, verbose_name="피일 경로")
+    fileDir = models.ImageField(
+        upload_to=compressionImg_upload_path,
+        null=True,
+        blank=True,
+        verbose_name="피일 경로",
+    )
     annotationCnt = models.IntegerField(
         default=0, null=False, blank=False, verbose_name="도식 수"
     )
     width = models.IntegerField(null=False, blank=False, verbose_name="이미지 가로 픽셀")
     height = models.IntegerField(null=False, blank=False, verbose_name="이미지 세로 픽셀")
-    thumbnail = models.ImageField(upload_to=thunmbnailImg_upload_path, null=True, blank=True, verbose_name="썸네일 경로"
+    thumbnail = models.ImageField(
+        upload_to=thunmbnailImg_upload_path,
+        null=True,
+        blank=True,
+        verbose_name="썸네일 경로",
     )
     location = models.PointField(
         null=True, blank=True, srid=4326, verbose_name="사진 GPS 위치"

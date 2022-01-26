@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 # =========================TIME_SERIES================================
 class TimeSeries(models.Model):
     id = models.BigAutoField(
@@ -53,11 +52,20 @@ class TimeSeriesRelation(models.Model):
         blank=False,
         verbose_name="프로젝트 아이디",
     )
-    email = models.CharField(default='', null=False, blank=False, max_length=200, db_column="email", verbose_name="이메일")
+    email = models.CharField(
+        default="",
+        null=False,
+        blank=False,
+        max_length=200,
+        db_column="email",
+        verbose_name="이메일",
+    )
 
     class Meta:
         db_table = "timeseries_relation"
         unique_together = (("projectInfo", "timeseriesId"),)
         verbose_name = "시계열 매핑"
         verbose_name_plural = "시계열 매핑"
+
+
 # =========================TIME_SERIES================================

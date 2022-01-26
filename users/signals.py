@@ -7,6 +7,6 @@ from .models import Storages, Users
 # when User Create, Storage Create
 @receiver(post_save, sender=Users)
 def Users_post_save(sender, created, **kwargs):
-    if created and kwargs['update_fields'] is None:
-        storage = Storages.objects.create(email=kwargs['instance'])
+    if created and kwargs["update_fields"] is None:
+        storage = Storages.objects.create(email=kwargs["instance"])
         storage.save()

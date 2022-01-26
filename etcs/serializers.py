@@ -13,13 +13,13 @@ class VideoListUploadSerializer(serializers.Serializer):
         for file in files:
             f = Video.objects.create(fileDir=file)
         return f
-    
-    
-        
+
+
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = "__all__"
+
 
 # =========================VIDEO===================================
 
@@ -29,6 +29,7 @@ class NestedLayersSerializer(serializers.ModelSerializer):
         model = NestedLayers
         fields = "__all__"
 
+
 # =========================NESTEDLAYER=============================
 
 # =========================ETCIMGS===================================
@@ -36,6 +37,7 @@ class EtcImgsSerializer(serializers.ModelSerializer):
     class Meta:
         model = EtcImgs
         fields = "__all__"
+
 
 # =========================ETCIMGS===================================
 
@@ -45,6 +47,7 @@ class EtcDocsSerializer(serializers.ModelSerializer):
         model = EtcDocs
         fields = "__all__"
 
+
 # =========================ETCDOCS===================================
 
 # =========================ETCDOCS===================================
@@ -53,6 +56,7 @@ class Etc2D3DLayersSerializer(serializers.ModelSerializer):
         model = Etc2D3DLayers
         fields = "__all__"
 
+
 # =========================ETCDOCS===================================
 
 # =========================GCP=======================================
@@ -60,4 +64,6 @@ class GCPSerializer(serializers.ModelSerializer):
     class Meta:
         model = GCP
         fields = "__all__"
+
+
 # =========================GCP=======================================

@@ -1,4 +1,3 @@
-from drf_braces.serializers.form_serializer import FormSerializer
 from rest_framework import serializers
 from .forms import ImgUploadForm
 from .models import Imgs

@@ -2,19 +2,19 @@ from .settings import *
 
 config_secret_debug = json.loads(open(CONFIG_SECRET_DEBUG_FILE).read())
 
-DB_CONFIG = config_secret_debug['django']['db']
+DB_CONFIG = config_secret_debug["django"]["db"]
 
 DATABASES = {
-    'default': {
-        'ENGINE': DB_CONFIG['engine'],
-        'NAME': DB_CONFIG['name'],
-        'USER': DB_CONFIG['user'],
-        'PASSWORD': DB_CONFIG['password'],
-        'HOST': DB_CONFIG['host'],
-        'PORT': DB_CONFIG['port'],
-        'OPTIONS': {
-            'sslmode': 'disable',
-         },
+    "default": {
+        "ENGINE": DB_CONFIG["engine"],
+        "NAME": DB_CONFIG["name"],
+        "USER": DB_CONFIG["user"],
+        "PASSWORD": DB_CONFIG["password"],
+        "HOST": DB_CONFIG["host"],
+        "PORT": DB_CONFIG["port"],
+        "OPTIONS": {
+            "sslmode": "disable",
+        },
     }
 }
 
@@ -64,4 +64,4 @@ DATABASES = {
 # }
 
 DEBUG = True
-ALLOWED_HOSTS = config_secret_debug['django']['allowed_hosts']
+ALLOWED_HOSTS = config_secret_debug["django"]["allowed_hosts"]

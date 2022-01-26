@@ -7,9 +7,9 @@ from .forms import ChangePasswordForm
 from .models import Users, Storages, Payment
 
 # =========================USER=======================================
-'''
+"""
     User Serializer
-'''
+"""
 
 
 # rest-auth register serializer
@@ -25,13 +25,13 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def get_cleaned_data(self):
         return {
-            'password1': self.validated_data.get('password1', ''),
-            'password2': self.validated_data.get('password2', ''),
-            'email': self.validated_data.get('email', ''),
-            'name': self.validated_data.get('name', ''),
-            'phoneNumber': self.validated_data.get('phoneNumber', ''),
-            'organization': self.validated_data.get('organization', ''),
-            'sectors': self.validated_data.get('sectors', ''),
+            "password1": self.validated_data.get("password1", ""),
+            "password2": self.validated_data.get("password2", ""),
+            "email": self.validated_data.get("email", ""),
+            "name": self.validated_data.get("name", ""),
+            "phoneNumber": self.validated_data.get("phoneNumber", ""),
+            "organization": self.validated_data.get("organization", ""),
+            "sectors": self.validated_data.get("sectors", ""),
         }
 
 
@@ -39,39 +39,49 @@ class CustomRegisterSerializer(RegisterSerializer):
 class CustomUserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('email', 'name', 'phoneNumber', 'organization')
-        read_only_fields = ('email', 'name', 'phoneNumber', 'organization')
+        fields = ("email", "name", "phoneNumber", "organization")
+        read_only_fields = ("email", "name", "phoneNumber", "organization")
 
 
 # user info serializer
 class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('id', 'email', 'name', 'phoneNumber', 'organization', 'plan', 'sectors')
+        fields = (
+            "id",
+            "email",
+            "name",
+            "phoneNumber",
+            "organization",
+            "plan",
+            "sectors",
+        )
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
         try:
             data = super().validate(attrs)
             refresh = self.get_token(self.user)
-            data['refresh'] = str(refresh)
-            data['access'] = str(refresh.access_token)
+            data["refresh"] = str(refresh)
+            data["access"] = str(refresh.access_token)
             return data
         except Exception as e:
             return {"message": "invalid"}
+
 
 # user additional info serializer
 class UserAdditionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('name', 'phoneNumber', 'organization', 'sectors')
+        fields = ("name", "phoneNumber", "organization", "sectors")
 
 
 # user plan change serializer
 class UserPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields = ('email', 'plan')
+        fields = ("email", "plan")
 
 
 # user password change
@@ -79,37 +89,39 @@ class UserPasswordFormSerializer(FormSerializer):
     class Meta:
         form = ChangePasswordForm
 
+
 # =========================USER=======================================
 
 # =========================STORAGES===================================
-'''
+"""
     Storage Serializer
-'''
+"""
 
 
 class StorageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storages
-        fields = '__all__'
+        fields = "__all__"
 
 
 class StorageFindSerializer(serializers.ModelSerializer):
     class Meta:
         model = Storages
-        fields = ('email',)
+        fields = ("email",)
 
 
 # =========================STORAGES===================================
 
 # =========================PAYMENT====================================
-'''
+"""
     Payment Serializer
-'''
+"""
 
 
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = "__all__"
+
 
 # =========================PAYMENT====================================

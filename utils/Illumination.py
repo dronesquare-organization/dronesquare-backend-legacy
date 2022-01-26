@@ -10,7 +10,9 @@ from io import BytesIO
 
 def adjust_gamma(image, gamma=1.0):
     invGamma = 1.0 / gamma
-    table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]).astype("uint8")
+    table = np.array(
+        [((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)]
+    ).astype("uint8")
 
     return cv2.LUT(image, table)
 
@@ -81,8 +83,11 @@ def change_filter(originFile, delta, img):
     #     os.makedirs(destination)
     # cv2.imwrite(destination+'/'+img.name, img_original)
 
-    
-    s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)                
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    )
     file = s3_client.get_object(Bucket="droneplatform", Key=originFile)["Body"].read()
     img_original = cv2.imdecode(np.asarray(bytearray(file)), cv2.IMREAD_COLOR)
 
@@ -90,14 +95,22 @@ def change_filter(originFile, delta, img):
         img_original = adjust_brightness_increase(img_original, abs(delta))
     else:
         img_original = adjust_brightness_decrease(img_original, abs(delta))
-    destination = 'media/{email}/projects/{projectId}/bright/{name}'.format(email=img.email,
-                                                                                      projectId=img.projectId, name="filtered_"+str(img.fileDir).split("/")[-1])
-    if not os.path.exists("/home/ubuntu/"+'/'.join(destination.split("/")[:-1])):
-        os.makedirs("/home/ubuntu/"+'/'.join(destination.split("/")[:-1]))
+    destination = "media/{email}/projects/{projectId}/bright/{name}".format(
+        email=img.email,
+        projectId=img.projectId,
+        name="filtered_" + str(img.fileDir).split("/")[-1],
+    )
+    if not os.path.exists("/home/ubuntu/" + "/".join(destination.split("/")[:-1])):
+        os.makedirs("/home/ubuntu/" + "/".join(destination.split("/")[:-1]))
 
-    cv2.imwrite("/home/ubuntu/"+destination, img_original)
-    
-    s3_client.upload_file("/home/ubuntu/"+destination, "droneplatform", destination, {"CacheControl":"no-cache, no-store, must-revalidate"})
-    os.remove("/home/ubuntu/"+destination)
+    cv2.imwrite("/home/ubuntu/" + destination, img_original)
+
+    s3_client.upload_file(
+        "/home/ubuntu/" + destination,
+        "droneplatform",
+        destination,
+        {"CacheControl": "no-cache, no-store, must-revalidate"},
+    )
+    os.remove("/home/ubuntu/" + destination)
 
     return img_original
