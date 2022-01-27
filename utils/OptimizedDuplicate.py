@@ -1,10 +1,10 @@
+import os
+import cv2
+import numpy as np
 from imgs.models import Imgs
 
 
 def optimizeDuplicate(params):
-    import os
-    import cv2
-    import numpy as np
 
     path, imgList, email, projectId = params
     List_of_SelectedImg = []
@@ -46,8 +46,8 @@ def optimizeDuplicate(params):
 
         # 3.1 detect orb features and compute descriptors
         orb = cv2.ORB_create(Max_Features)
-        keypoints1, descriptors1 = orb.detectAndCompute(im1_G, None)  # 첫번째 이미지 특징점 계산
-        keypoints2, descriptors2 = orb.detectAndCompute(im2_G, None)  # 두번째 이미지 특징점 계산
+        _, descriptors1 = orb.detectAndCompute(im1_G, None)  # 첫번째 이미지 특징점 계산
+        _, descriptors2 = orb.detectAndCompute(im2_G, None)  # 두번째 이미지 특징점 계산
 
         # 3.2 match features
         matcher = cv2.DescriptorMatcher_create(

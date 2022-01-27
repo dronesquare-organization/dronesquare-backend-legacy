@@ -66,7 +66,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             data["refresh"] = str(refresh)
             data["access"] = str(refresh.access_token)
             return data
-        except Exception as e:
+        except Exception:
             return {"message": "invalid"}
 
 

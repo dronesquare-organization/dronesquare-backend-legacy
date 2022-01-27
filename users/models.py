@@ -10,6 +10,7 @@ from django.db import models
 from .managers import UserManager
 from backendAPI import settings
 
+
 # =========================USER=======================================
 class OverwriteStorage(FileSystemStorage):
     """
@@ -20,7 +21,6 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
-
 
 
 class Users(AbstractBaseUser, PermissionsMixin):
@@ -140,4 +140,6 @@ class Payment(models.Model):
         unique_together = (("email", "account", "bank"),)
         verbose_name = "계좌 정보"
         verbose_name_plural = "계좌 정보"
+
+
 # =========================PAYMENT====================================

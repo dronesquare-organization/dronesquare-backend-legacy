@@ -1,3 +1,4 @@
+
 import mimetypes
 import os
 import shutil
@@ -15,9 +16,7 @@ from projects.models import Projects
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from users.models import Users
 from utils.DuplicateName import createFileName
 
@@ -38,11 +37,12 @@ from utils.ImgUploadSave import (
 )
 from io import BytesIO
 
-# Create your views here.
+
 
 # =========================VIDEO======================================
 class VideoViewSet(viewsets.ViewSet):
     """비디오 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -73,7 +73,7 @@ class VideoViewSet(viewsets.ViewSet):
     def create(self, request):
         accept = ["mp4"]
         email = str(request.user)
-        projectId = request.data["projectId"]
+        # projectId = request.data["projectId"]
         fileList = request.FILES.getlist("files")
         if type(request.data) != dict:
             file = fileList[0]
@@ -103,11 +103,15 @@ class VideoViewSet(viewsets.ViewSet):
             if not os.path.exists(tmppath):
                 os.makedirs(tmppath)
             tmpSaveName = "".join(file.name.split(".part")[0].split(" "))
-            destination = open(tmppath + "/" + tmpSaveName, "ab+")
 
-            for chunk in file.chunks():
-                destination.write(chunk)
-            destination.close()
+            # open과 close는 with문으로 통일하여 보다 안전하게 함.
+            with open(tmppath + "/" + tmpSaveName, "ab+") as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+            # destination = open(tmppath + "/" + tmpSaveName, "ab+")
+            # for chunk in file.chunks():
+            #     destination.write(chunk)
+            # destination.close()
 
             if (
                 request.data["is_last"] == "true"
@@ -127,7 +131,7 @@ class VideoViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = mimetypes.guess_type(f)[0]
-                        video = Video.objects.create(
+                        Video.objects.create(
                             name=fileName,
                             projectId=projects,
                             size=size,
@@ -156,6 +160,7 @@ class VideoViewSet(viewsets.ViewSet):
 
 class VideoDeleteViewSet(viewsets.ViewSet):
     """비디오 삭제 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="비디오 삭제",
@@ -240,6 +245,7 @@ class VideoListViewSet(viewsets.ViewSet):
 
 class VideoDownloadViewSet(viewsets.ViewSet):
     """비디오 다운로드 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="비디오 다운로드",
@@ -302,6 +308,7 @@ class VideoDownloadViewSet(viewsets.ViewSet):
 # =========================ETCIMG======================================
 class EtcImgsViewSet(viewsets.ViewSet):
     """etc 이미지 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -377,7 +384,7 @@ class EtcImgsViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = "image/" + str(f).split(".")[-1].lower()
-                        etcImg = EtcImgs.objects.create(
+                        EtcImgs.objects.create(
                             name=fileName,
                             projectId=projects,
                             width=file.width,
@@ -404,6 +411,7 @@ class EtcImgsViewSet(viewsets.ViewSet):
 
 class EtcImgsDeleteViewSet(viewsets.ViewSet):
     """etc 이미지 삭제 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="기타 이미지 파일 삭제",
@@ -450,6 +458,7 @@ class EtcImgsDeleteViewSet(viewsets.ViewSet):
 
 class EtcImgsListViewSet(viewsets.ViewSet):
     """etc 이미지 리스트 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="기타 이미지 파일 리스트 조회",
@@ -536,6 +545,7 @@ class EtcImgsDownloadViewSet(viewsets.ViewSet):
 # =========================ETCDOC======================================
 class EtcDocsViewSet(viewsets.ViewSet):
     """etc docs 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -610,7 +620,7 @@ class EtcDocsViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = mimetypes.guess_type(f)[0]
-                        etcDoc = EtcDocs.objects.create(
+                        EtcDocs.objects.create(
                             name=fileName,
                             projectId=projects,
                             size=size,
@@ -635,6 +645,7 @@ class EtcDocsViewSet(viewsets.ViewSet):
 
 class EtcDocsDeleteViewSet(viewsets.ViewSet):
     """etc docs 삭제 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="기타 문서 파일 삭제",
@@ -681,6 +692,7 @@ class EtcDocsDeleteViewSet(viewsets.ViewSet):
 
 class EtcDocsListViewSet(viewsets.ViewSet):
     """etc docs 리스트 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="기타 문서 파일 리스트 조회",
@@ -768,6 +780,7 @@ class EtcDocsDownloadViewSet(viewsets.ViewSet):
 # =========================NESTEDLAYER=================================
 class NestedLayersViewSet(viewsets.ViewSet):
     """레이어 중첩 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -839,7 +852,7 @@ class NestedLayersViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = mimetypes.guess_type(f)[0]
-                        layer = NestedLayers.objects.create(
+                        NestedLayers.objects.create(
                             name=fileName,
                             projectId=projects,
                             size=size,
@@ -864,6 +877,7 @@ class NestedLayersViewSet(viewsets.ViewSet):
 
 class NestedLayersUpdateViewSet(viewsets.ViewSet):
     """레이어 중첩 업데이트 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="레이어 중첩 파일, 레이어 중첩 리스트 추가",
@@ -910,7 +924,7 @@ class NestedLayersUpdateViewSet(viewsets.ViewSet):
             isEnroll=False
         )
         for data in request.data:
-            nestedLayer = NestedLayers.objects.filter(
+            NestedLayers.objects.filter(
                 email=email, projectId=projectId, id=data["id"]
             ).update(isEnroll=True, coordSystem=data["coordSystem"])
         NestedLayerList = NestedLayers.objects.filter(projectId=projectId, email=email)
@@ -921,6 +935,7 @@ class NestedLayersUpdateViewSet(viewsets.ViewSet):
 
 class NestedLayersDeleteViewSet(viewsets.ViewSet):
     """레이어 중첩 삭제 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="레이어 중첩 파일 삭제",
@@ -969,6 +984,7 @@ class NestedLayersDeleteViewSet(viewsets.ViewSet):
 
 class NestedLayersListViewSet(viewsets.ViewSet):
     """레이어 중첩 파일 리스트 조회 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="레이어 중첩 파일 리스트 조회",
@@ -1001,6 +1017,7 @@ class NestedLayersListViewSet(viewsets.ViewSet):
 
 class NestedLayersDownloadViewSet(viewsets.ViewSet):
     """중첩 레이어 다운로드 뷰셋"""
+
     @swagger_auto_schema(
         operation_description="레이어 중첩 파일 다운로드",
         manual_parameters=[
@@ -1059,6 +1076,7 @@ class NestedLayersDownloadViewSet(viewsets.ViewSet):
 # =========================ETC2D3DLAYER================================
 class Etc2D3DLayersViewSet(viewsets.ViewSet):
     """기타 2D3D 레이어 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -1135,7 +1153,7 @@ class Etc2D3DLayersViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = mimetypes.guess_type(f)[0]
-                        layer = Etc2D3DLayers.objects.create(
+                        Etc2D3DLayers.objects.create(
                             name=fileName,
                             projectId=projects,
                             size=size,
@@ -1160,6 +1178,7 @@ class Etc2D3DLayersViewSet(viewsets.ViewSet):
 
 class Etc2D3DLayersDeleteViewSet(viewsets.ViewSet):
     """기타 2D3D 레이어 삭제 뷰셋"""
+
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="기타 2D3D 레이어 파일 삭제",
@@ -1292,6 +1311,7 @@ class Etc2D3DLayersDownloadViewSet(viewsets.ViewSet):
 # =========================GCP=========================================
 class GCPViewSet(viewsets.ViewSet):
     """GCP 파일 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic()
@@ -1362,7 +1382,7 @@ class GCPViewSet(viewsets.ViewSet):
                         t = open(tmppath + "/" + f, "rb")
                         size = os.path.getsize(tmppath + "/" + f)
                         ext = mimetypes.guess_type(f)[0]
-                        gcp = GCP.objects.create(
+                        GCP.objects.create(
                             name=fileName,
                             projectId=projects,
                             size=size,

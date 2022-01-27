@@ -3,7 +3,7 @@ import datetime
 import numpy as np
 import math
 import rasterio
-from pyproj import Transformer, transformer
+from pyproj import Transformer
 from rasterio.mask import mask
 from backendAPI import settings
 
@@ -289,15 +289,18 @@ def volume_by_bottom_total(
 def volume_by_bottom_fill(out_image, minz, gsd):  # 볼륨 채우기
     changed = np.array(out_image, dtype=np.float64)
     changed[changed != -10000] -= minz
-    result = np.sum(
+    result = (
         np.sum(
-            changed,
-            axis=1,
-            where=((changed != -10000) & (changed < 0)),
+            np.sum(
+                changed,
+                axis=1,
+                where=((changed != -10000) & (changed < 0)),
+                dtype=np.float64,
+            ),
             dtype=np.float64,
-        ),
-        dtype=np.float64,
-    ) * (gsd * gsd)
+        )
+        * (gsd * gsd)
+    )
     return result
 
 

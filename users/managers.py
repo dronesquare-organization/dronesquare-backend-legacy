@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+
 class UserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -31,7 +32,7 @@ class UserManager(BaseUserManager):
         """
         Create and save a SuperUser with the given email and password.
         """
-        user = self.model(
+        self.model(
             email=self.normalize_email(email),
             name=name,
             phoneNumber=phoneNumber,

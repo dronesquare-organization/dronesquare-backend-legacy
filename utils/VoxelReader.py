@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import rasterio
-from pyproj import Transformer
 from rasterio.mask import mask
-import numpy as np
 import os
 import datetime
 from utils.Calculate3D import transform_coordinate

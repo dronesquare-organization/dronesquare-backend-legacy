@@ -78,7 +78,9 @@ class RegistrationViewSet(viewsets.ViewSet):
             )
             msg.attach_alternative(html_content, "text/html")
             msg.send()
-            return Response({"message": "Confirm your Email"}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Confirm your Email"}, status=status.HTTP_200_OK
+            )
         return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
@@ -203,7 +205,9 @@ class UserPasswordViewSet(viewsets.ViewSet):
     )
     def partial_update(self, request, pk=None):
         if request.data["password"] != request.data["password1"]:
-            return Response({"message": "Password is not Same"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Password is not Same"}, status=status.HTTP_400_BAD_REQUEST
+            )
         user = request.user
         if check_password(request.data["current_password"], user.password):
             try:
@@ -214,7 +218,10 @@ class UserPasswordViewSet(viewsets.ViewSet):
             except ValidationError as e:
                 return Response(e, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({"message": "current password is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "current password is not valid"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class LogoutView(APIView):
@@ -308,7 +315,9 @@ class PaymentViewSet(viewsets.ViewSet):
     def create(self, request):
         email = str(request.user)
         if request.data["email"] != email:
-            return Response({"message": "unAuthorized"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "unAuthorized"}, status=status.HTTP_400_BAD_REQUEST
+            )
         request.data["email"] = email
         serializer = PaymentSerializer(data=request.data, context={"request": request})
         if serializer.is_valid(raise_exception=True):
@@ -332,7 +341,9 @@ class PaymentViewSet(viewsets.ViewSet):
     def partial_update(self, request, pk):
         email = str(request.user)
         if request.data["email"] != email:
-            return Response({"message": "unAuthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(
+                {"message": "unAuthorized"}, status=status.HTTP_401_UNAUTHORIZED
+            )
         query_set = Payment.objects.all()
         payment = get_object_or_404(query_set, id=pk)
         serializer = PaymentSerializer(
@@ -360,7 +371,9 @@ class PaymentViewSet(viewsets.ViewSet):
         payment = get_object_or_404(query_set, id=pk)
         serializer = PaymentSerializer(payment)
         if serializer.data["email"] != email:
-            return Response({"message": "unAuthorized"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "unAuthorized"}, status=status.HTTP_400_BAD_REQUEST
+            )
         payment.delete()
         return Response()
 

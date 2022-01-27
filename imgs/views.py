@@ -48,10 +48,12 @@ from utils.ImgUploadSave import (
 from utils.OptimizedDuplicate import optimizeDuplicate
 from utils.RedundancyCalculate import IOR_F
 from utils.Illumination import change_filter
+
 # Create your views here.
 # =========================IMGS=======================================
 class NewImgsViewSet(viewsets.ViewSet):
     """새 이미지 뷰셋"""
+
     parser_classes = (MultiPartParser, FormParser)
 
     @transaction.atomic
@@ -88,7 +90,10 @@ class NewImgsViewSet(viewsets.ViewSet):
             if type(request.data) != dict:
                 file = request.FILES.getlist("file")[0]
                 if file is None:
-                    return Response({"message": "file is not exist"}, status=status.HTTP_404_NOT_FOUND)
+                    return Response(
+                        {"message": "file is not exist"},
+                        status=status.HTTP_404_NOT_FOUND,
+                    )
 
                 cr_path = path_settings(email, projectId)
 

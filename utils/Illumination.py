@@ -2,10 +2,8 @@
 import os
 import cv2
 import numpy as np
-from PIL import Image
 import boto3
 from backendAPI import settings
-from io import BytesIO
 
 
 def adjust_gamma(image, gamma=1.0):

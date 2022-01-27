@@ -1,4 +1,3 @@
-from drf_braces.serializers.form_serializer import FormSerializer
 from rest_framework import serializers
 from .models import Video, EtcImgs, EtcDocs, Etc2D3DLayers, NestedLayers, GCP
 

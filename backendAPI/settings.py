@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta  # JWT 관련
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname
 import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +26,7 @@ DJANGO_APPS = [
     "django.contrib.sites",
     "django.contrib.gis",
 ]
+
 PROJECT_APPS = [
     "default",
     "users",
@@ -36,6 +37,7 @@ PROJECT_APPS = [
     "projects",
     "timeseries",
 ]
+
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",

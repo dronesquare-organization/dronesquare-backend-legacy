@@ -1,10 +1,8 @@
-from math import log
 from PIL import Image
 from PIL.ExifTags import TAGS
 from utils.DuplicateName import createFileName
 from utils.Compression import compressionImage
 from utils.GetMetaData import getMetaData
-from utils.AutoFilterPredict import IE
 from django.core.files.base import File
 from imgs.models import Imgs
 import shutil

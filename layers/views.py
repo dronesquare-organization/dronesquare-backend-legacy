@@ -32,7 +32,6 @@ from utils.Calculate3D import (
 
 # =========================2DLAYERS===================================
 class Layers2DViewSet(viewsets.ViewSet):
-
     @transaction.atomic()
     @swagger_auto_schema(
         operation_description="2D 레이어 생성",
